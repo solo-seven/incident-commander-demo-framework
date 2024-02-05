@@ -1,0 +1,54 @@
+logging {
+    level = "info"
+    format = "logfmt"
+}
+
+module.git "grafana_cloud" {
+  repository = "https://github.com/grafana/agent-modules.git"
+  path = "modules/grafana-cloud/autoconfigure/module.river"
+  revision = "main"
+  pull_frequency = "0s"
+  arguments {
+    stack_name = "solo7"
+    token = env("GRAFANA_CLOUD_TOKEN")
+  }
+}
+otelcol.exporter.prometheus "to_prometheus" {
+  forward_to = [
+    module.git.grafana_cloud.exports.metrics_receiver,
+  ]
+}
+otelcol.exporter.loki "to_loki" {
+  forward_to = [
+    module.git.grafana_cloud.exports.logs_receiver,
+  ]
+}
+otelcol.receiver.otlp "default" {
+  grpc {
+  }
+  http {
+  }
+  output {
+    metrics = [
+      otelcol.exporter.prometheus.to_prometheus.input,
+    ]
+    logs = [
+      otelcol.exporter.loki.to_loki.input,
+    ]
+    traces = [
+      module.git.grafana_cloud.exports.traces_receiver,
+    ]
+  }
+}
+
+prometheus.scrape "java_backend_api" {
+  forward_to = [
+    module.git.grafana_cloud.exports.metrics_receiver,
+  ]
+  metrics_path = "/actuator/prometheus"
+  targets = [
+    {
+      "__address__" = "localhost:8080",
+    },
+  ]
+}

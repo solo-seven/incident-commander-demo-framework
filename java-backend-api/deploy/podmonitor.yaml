@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: monolith-podmonitor
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: monolith
+  namespaceSelector:
+    matchNames:
+      - default # Adjust if your pods are in a different namespace
+  podMetricsEndpoints:
+    - port: http # This should match the name of the port exposed by your pods that serves metrics
+      path: /actuator/prometheus

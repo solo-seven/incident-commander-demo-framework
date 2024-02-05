@@ -1,0 +1,29 @@
+cluster:
+  name: distributed-systems-demo
+externalServices:
+  prometheus:
+    host: https://prometheus-us-central1.grafana.net
+    basicAuth:
+      username: "800950"
+      password:
+  loki:
+    host: https://logs-prod-017.grafana.net
+    basicAuth:
+      username: "399444"
+      password:
+  tempo:
+    host: https://tempo-us-central1.grafana.net:443
+    basicAuth:
+      username: "395957"
+      password:
+opencost:
+  opencost:
+    exporter:
+      defaultClusterId: distributed-systems-demo
+    prometheus:
+      external:
+        url: https://prometheus-us-central1.grafana.net/api/prom
+traces:
+  enabled: true
+
+
