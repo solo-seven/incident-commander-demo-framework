@@ -1,0 +1,63 @@
+# Sample config for Grafana Agent
+# For a full configuration reference, see: https://grafana.com/docs/agent/latest/configuration/.
+server:
+  log_level: info
+
+metrics:
+  global:
+    scrape_interval: 1m
+    remote_write:
+      - url: https://prometheus-us-central1.grafana.net/api/prom/push
+        basic_auth:
+          username:
+          password:
+  wal_directory: './build/grafana-agent-metrics'
+  configs:
+  # Example Prometheus scrape configuration to scrape the agent itself for metrics.
+  # This is not needed if the agent integration is enabled.
+  - name: agent
+    host_filter: false
+    scrape_configs:
+    - job_name: springboot
+      metrics_path: '/actuator/prometheus'
+      static_configs:
+      - targets: ['127.0.0.1:8080']
+
+logs:
+  positions_directory: /tmp/promtail
+  configs:
+    - name: distributed-systems-demo-local-logs
+      clients:
+        - url: https://logs-prod-017.grafana.net/loki/api/v1/push
+      scrape_configs:
+        - job_name: spring-boot-local-logs
+          static_configs:
+            - targets:
+                - localhost
+              labels:
+                job: spring-boot-local-logs
+                __path__: ./java-backend-api/build/run/app.log
+
+traces:
+  configs:
+  - name: default
+    remote_write:
+      - endpoint: tempo-us-central1.grafana.net:443
+        basic_auth:
+          username:
+          password:
+    receivers:
+      otlp:
+        protocols:
+          http:
+          grpc:
+
+
+integrations:
+  agent:
+    enabled: true
+  node_exporter:
+    enabled: true
+    include_exporter_metrics: true
+    disable_collectors:
+      - "mdadm"
