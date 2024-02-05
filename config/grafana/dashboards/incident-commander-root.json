@@ -487,7 +487,7 @@
       "type": "row"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -495,321 +495,322 @@
         "y": 8
       },
       "id": 3,
-      "panels": [],
-      "title": "Overview",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafanacloud-prom"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unitScale": true
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 9
-      },
-      "id": 2,
-      "options": {
-        "basemap": {
-          "config": {},
-          "name": "Layer 0",
-          "type": "default"
-        },
-        "controls": {
-          "mouseWheelZoom": true,
-          "showAttribution": true,
-          "showDebug": false,
-          "showMeasure": false,
-          "showScale": false,
-          "showZoom": true
-        },
-        "layers": [
-          {
-            "config": {
-              "showLegend": false,
-              "style": {
-                "color": {
-                  "fixed": "blue"
-                },
-                "opacity": 0.4,
-                "rotation": {
-                  "fixed": 0,
-                  "max": 360,
-                  "min": -360,
-                  "mode": "mod"
-                },
-                "size": {
-                  "fixed": 5,
-                  "max": 15,
-                  "min": 2
-                },
-                "symbol": {
-                  "fixed": "img/icons/marker/circle.svg",
-                  "mode": "fixed"
-                },
-                "symbolAlign": {
-                  "horizontal": "center",
-                  "vertical": "center"
-                },
-                "textConfig": {
-                  "fontSize": 12,
-                  "offsetX": 0,
-                  "offsetY": 0,
-                  "textAlign": "center",
-                  "textBaseline": "middle"
-                }
-              }
-            },
-            "location": {
-              "mode": "auto"
-            },
-            "name": "Layer 1",
-            "tooltip": true,
-            "type": "markers"
-          }
-        ],
-        "tooltip": {
-          "mode": "details"
-        },
-        "view": {
-          "allLayers": true,
-          "id": "fit",
-          "lat": 0,
-          "lon": 0,
-          "zoom": 15
-        }
-      },
-      "pluginVersion": "10.4.0-65875",
-      "targets": [
+      "panels": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "grafanacloud-prom"
           },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "\n  100 * (1 - (\n    sum by (probe, geohash)\n      (\n        rate(probe_all_success_sum[$__range])\n        *\n        on (instance, job, probe, config_version)\n        group_left(geohash)\n        max\n        by (instance, job, probe, config_version, check_name, geohash)\n        (sm_check_info{check_name=~\".*\", region=~\".*\", })\n      ) \n      / \n      sum by (probe, geohash)\n      (\n        rate(probe_all_success_count[$__range])\n        *\n        on (instance, job, probe, config_version)\n        group_left(geohash)\n        max\n        by (instance, job, probe, config_version, check_name, geohash)\n        (sm_check_info{check_name=~\".*\", region=~\".*\", })\n      )\n    )\n  )",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Error Rate by Location",
-      "type": "geomap"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafanacloud-prom"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "links": [],
-          "unitScale": true
-        },
-        "overrides": []
-      },
-      "fill": 10,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 8,
-        "y": 9
-      },
-      "hiddenSeries": false,
-      "id": 17,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "sort": "current",
-        "sortDesc": true,
-        "total": false,
-        "values": true
-      },
-      "lines": false,
-      "linewidth": 0,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "10.4.0-65875",
-      "pointradius": 1,
-      "points": true,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "transfer",
-          "zindex": 3
-        },
-        {
-          "alias": "processing",
-          "zindex": 2
-        },
-        {
-          "alias": "tls",
-          "zindex": 1
-        },
-        {
-          "alias": "connect",
-          "zindex": 0
-        },
-        {
-          "alias": "resolve",
-          "zindex": -1
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": "grafanacloud-solo7-prom",
-          "editorMode": "code",
-          "expr": "avg(probe_duration_seconds{probe=~\".*\", instance=\"www.valesordev.com\", job=\"Valesor Development Ping\"} * on (instance, job,probe,config_version) group_left probe_success{probe=~\".*\",instance=\"www.valesordev.com\", job=\"Valesor Development Ping\"} > 0) by (probe)",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{probe}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Response latency by probe",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transformations": [],
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "c018d440-0606-41b1-9426-2a5985798f2e"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unitScale": true
+            },
+            "overrides": []
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 9
+          },
+          "id": 2,
+          "options": {
+            "basemap": {
+              "config": {},
+              "name": "Layer 0",
+              "type": "default"
+            },
+            "controls": {
+              "mouseWheelZoom": true,
+              "showAttribution": true,
+              "showDebug": false,
+              "showMeasure": false,
+              "showScale": false,
+              "showZoom": true
+            },
+            "layers": [
+              {
+                "config": {
+                  "showLegend": false,
+                  "style": {
+                    "color": {
+                      "fixed": "blue"
+                    },
+                    "opacity": 0.4,
+                    "rotation": {
+                      "fixed": 0,
+                      "max": 360,
+                      "min": -360,
+                      "mode": "mod"
+                    },
+                    "size": {
+                      "fixed": 5,
+                      "max": 15,
+                      "min": 2
+                    },
+                    "symbol": {
+                      "fixed": "img/icons/marker/circle.svg",
+                      "mode": "fixed"
+                    },
+                    "symbolAlign": {
+                      "horizontal": "center",
+                      "vertical": "center"
+                    },
+                    "textConfig": {
+                      "fontSize": 12,
+                      "offsetX": 0,
+                      "offsetY": 0,
+                      "textAlign": "center",
+                      "textBaseline": "middle"
+                    }
+                  }
+                },
+                "location": {
+                  "mode": "auto"
+                },
+                "name": "Layer 1",
+                "tooltip": true,
+                "type": "markers"
+              }
+            ],
+            "tooltip": {
+              "mode": "details"
+            },
+            "view": {
+              "allLayers": true,
+              "id": "fit",
+              "lat": 0,
+              "lon": 0,
+              "zoom": 15
             }
           },
-          "mappings": [],
-          "unitScale": true
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 4,
-        "x": 20,
-        "y": 9
-      },
-      "id": 27,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          "pluginVersion": "10.4.0-65875",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "grafanacloud-prom"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "\n  100 * (1 - (\n    sum by (probe, geohash)\n      (\n        rate(probe_all_success_sum[$__range])\n        *\n        on (instance, job, probe, config_version)\n        group_left(geohash)\n        max\n        by (instance, job, probe, config_version, check_name, geohash)\n        (sm_check_info{check_name=~\".*\", region=~\".*\", })\n      ) \n      / \n      sum by (probe, geohash)\n      (\n        rate(probe_all_success_count[$__range])\n        *\n        on (instance, job, probe, config_version)\n        group_left(geohash)\n        max\n        by (instance, job, probe, config_version, check_name, geohash)\n        (sm_check_info{check_name=~\".*\", region=~\".*\", })\n      )\n    )\n  )",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "A"
+            }
           ],
-          "fields": "",
-          "values": false
+          "title": "Error Rate by Location",
+          "type": "geomap"
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafanacloud-prom"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "links": [],
+              "unitScale": true
+            },
+            "overrides": []
+          },
+          "fill": 10,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 8,
+            "y": 9
+          },
+          "hiddenSeries": false,
+          "id": 17,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": false,
+          "linewidth": 0,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "10.4.0-65875",
+          "pointradius": 1,
+          "points": true,
+          "renderer": "flot",
+          "seriesOverrides": [
+            {
+              "alias": "transfer",
+              "zindex": 3
+            },
+            {
+              "alias": "processing",
+              "zindex": 2
+            },
+            {
+              "alias": "tls",
+              "zindex": 1
+            },
+            {
+              "alias": "connect",
+              "zindex": 0
+            },
+            {
+              "alias": "resolve",
+              "zindex": -1
+            }
+          ],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": "grafanacloud-solo7-prom",
+              "editorMode": "code",
+              "expr": "avg(probe_duration_seconds{probe=~\".*\", instance=\"www.valesordev.com\", job=\"Valesor Development Ping\"} * on (instance, job,probe,config_version) group_left probe_success{probe=~\".*\",instance=\"www.valesordev.com\", job=\"Valesor Development Ping\"} > 0) by (probe)",
+              "instant": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{probe}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Response latency by probe",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "transformations": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
         {
           "datasource": {
             "type": "grafana-testdata-datasource",
             "uid": "c018d440-0606-41b1-9426-2a5985798f2e"
           },
-          "refId": "A",
-          "scenarioId": "random_walk",
-          "seriesCount": 4
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": [],
+              "unitScale": true
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 20,
+            "y": 9
+          },
+          "id": 27,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-testdata-datasource",
+                "uid": "c018d440-0606-41b1-9426-2a5985798f2e"
+              },
+              "refId": "A",
+              "scenarioId": "random_walk",
+              "seriesCount": 4
+            }
+          ],
+          "title": "HTTP Error Codes",
+          "type": "piechart"
         }
       ],
-      "title": "HTTP Error Codes",
-      "type": "piechart"
+      "title": "Overview",
+      "type": "row"
     },
     {
       "collapsed": false,
@@ -817,7 +818,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 9
       },
       "id": 8,
       "panels": [],
@@ -860,7 +861,7 @@
         "h": 7,
         "w": 4,
         "x": 0,
-        "y": 17
+        "y": 10
       },
       "id": 13,
       "options": {
@@ -933,7 +934,7 @@
         "h": 7,
         "w": 4,
         "x": 4,
-        "y": 17
+        "y": 10
       },
       "id": 14,
       "options": {
@@ -1006,7 +1007,7 @@
         "h": 7,
         "w": 4,
         "x": 8,
-        "y": 17
+        "y": 10
       },
       "id": 15,
       "options": {
@@ -1058,7 +1059,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 17
+        "y": 10
       },
       "id": 7,
       "options": {
@@ -1187,7 +1188,7 @@
         "h": 6,
         "w": 4,
         "x": 0,
-        "y": 24
+        "y": 17
       },
       "id": 24,
       "options": {
@@ -1259,7 +1260,7 @@
         "h": 6,
         "w": 4,
         "x": 4,
-        "y": 24
+        "y": 17
       },
       "id": 25,
       "options": {
@@ -1331,7 +1332,7 @@
         "h": 6,
         "w": 4,
         "x": 8,
-        "y": 24
+        "y": 17
       },
       "id": 26,
       "options": {
@@ -1376,7 +1377,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 30
+        "y": 23
       },
       "id": 9,
       "options": {
@@ -1406,14 +1407,14 @@
     },
     {
       "datasource": {
-        "type": "grafana-testdata-datasource",
-        "uid": "c018d440-0606-41b1-9426-2a5985798f2e"
+        "type": "loki",
+        "uid": "grafanacloud-logs"
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 23
       },
       "id": 22,
       "options": {
@@ -1429,12 +1430,13 @@
       "targets": [
         {
           "datasource": {
-            "type": "grafana-testdata-datasource",
-            "uid": "c018d440-0606-41b1-9426-2a5985798f2e"
+            "type": "loki",
+            "uid": "grafanacloud-logs"
           },
-          "levelColumn": true,
-          "refId": "A",
-          "scenarioId": "logs"
+          "editorMode": "builder",
+          "expr": "{cluster=\"distributed-systems-demo\", namespace!=\"kube-system\"} |= ``",
+          "queryType": "range",
+          "refId": "A"
         }
       ],
       "title": "Microservices Logs",
@@ -1476,7 +1478,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 38
+        "y": 31
       },
       "id": 10,
       "targets": [
@@ -1520,7 +1522,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 38
+        "y": 31
       },
       "id": 23,
       "targets": [
@@ -1561,7 +1563,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 46
+        "y": 39
       },
       "id": 12,
       "panels": [
@@ -1609,7 +1611,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 40
       },
       "id": 11,
       "panels": [],
@@ -1675,6 +1677,6 @@
   "timezone": "",
   "title": "Incident Commander Dashboard",
   "uid": "bffcf7aa-87a9-408b-b372-3681d3e5f114",
-  "version": 6,
+  "version": 8,
   "weekStart": ""
 }
