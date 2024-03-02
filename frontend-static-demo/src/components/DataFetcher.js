@@ -4,8 +4,9 @@ const DataFetcher = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dataUri = process.env.REACT_APP_DATA_URI || 'http://localhost:8080'
   useEffect(() => {
-    fetch('http://api.dsdemo.valesordev.com/info')
+    fetch(dataUri + '/info')
       .then(response => {
         if(!response.ok) {
           throw new Error('Network response was not set');

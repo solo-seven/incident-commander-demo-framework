@@ -6,28 +6,31 @@ import reportWebVitals from './reportWebVitals';
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
 
-const faro = initializeFaro({
-  url: 'https://faro-collector-prod-us-central-0.grafana.net/collect/998b2feb4df3ace01f15f649f0f868c2',
-  app: {
-    name: 'distributed-systems-demo',
-    version: '1.0.0',
-    environment: 'production'
-  },
+if(process.env.NODE_ENV === 'production') {
 
-  instrumentations: [
-    // Mandatory, overwriting the instrumentations array would cause the default instrumentations to be omitted
-    ...getWebInstrumentations(),
+  const faro = initializeFaro({
+    url: 'https://faro-collector-prod-us-central-0.grafana.net/collect/998b2feb4df3ace01f15f649f0f868c2',
+    app: {
+      name: 'distributed-systems-demo',
+      version: '1.0.0',
+      environment: 'production'
+    },
 
-    // Initialization of the tracing package.
-    // This packages is optional because it increases the bundle size noticeably. Only add it if you want tracing data.
-    new TracingInstrumentation({
-      instrumentationOptions: {
-        // Requests to these URLs will have tracing headers attached.
-        propagateTraceHeaderCorsUrls: [new RegExp('http://api.dsdemo.valesordev.com/*')],
-      },
-    }),
-  ],
-});
+    instrumentations: [
+      // Mandatory, overwriting the instrumentations array would cause the default instrumentations to be omitted
+      ...getWebInstrumentations(),
+
+      // Initialization of the tracing package.
+      // This packages is optional because it increases the bundle size noticeably. Only add it if you want tracing data.
+      new TracingInstrumentation({
+        instrumentationOptions: {
+          // Requests to these URLs will have tracing headers attached.
+          propagateTraceHeaderCorsUrls: [new RegExp('http://api.dsdemo.valesordev.com/*')],
+        },
+      }),
+    ],
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

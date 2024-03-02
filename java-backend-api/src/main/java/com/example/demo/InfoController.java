@@ -14,12 +14,6 @@ import java.util.Iterator;
 public class InfoController {
     @GetMapping
     public SiteInformation getSiteInformation(WebRequest request) {
-        Iterator<String> enumeration = request.getHeaderNames();
-        while (enumeration.hasNext()) {
-            String nextElement = enumeration.next();
-            System.out.println("Header " + nextElement + " : " + request.getHeader(nextElement));
-        }
-        System.out.println("Returning site information");
-        return new SiteInformation();
+        return new SiteInformation(new String[] {"testFlag"});
     }
 }
