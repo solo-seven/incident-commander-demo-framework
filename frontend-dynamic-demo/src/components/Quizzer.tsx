@@ -24,18 +24,17 @@ const list2Options: Option[] = [
     { id: 3, label: 'First Contentful Paint' }
 ];
 const defaultQuestions: Question[] = [
-    { id: 1, label: 'Question 1: What does TTFB mean?', options: list1Options },
-    { id: 2, label: 'Question 2: What is FCP?', options: list2Options }
+    { id: 1, label: 'What does TTFB mean?', options: list1Options },
+    { id: 2, label: 'What is FCP?', options: list2Options }
 ]
 const Quizzer: React.FC = () => {
-    const [selectedList1, setSelectedList1] = useState<number>();
-    const [selectedList2, setSelectedList2] = useState<number>();
     const [questions, setQuestions] = useState<Question[]>(defaultQuestions);
+    const [answers, setAnswers] = useState<number[]>(new Array(10));
 
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await fetch('http://backend.dsdemo.valesordev.com/quiz/questions');
+                const response = await fetch('http://api.dsdemo.valesordev.com/quiz/questions/1');
                 if(!response.ok) {
                     console.error(response.statusText);
                     return;
@@ -49,26 +48,18 @@ const Quizzer: React.FC = () => {
         fetchQuestions();
     }, []);
     const handleRadioChange = (listNumber: number, optionId: number) => {
-        if (listNumber === 1) {
-            setSelectedList1(optionId);
-        } else if (listNumber === 2) {
-            setSelectedList2(optionId);
-        }
+        answers[listNumber] = optionId
+        setAnswers(answers);
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const dataToSend = {
-            list1Selected: selectedList1,
-            list2Selected: selectedList2,
-        };
-
         try {
-            const response = await fetch('http://backend.dsdemo.valesordev.com/quiz/answers', {
+            const response = await fetch('http://api.dsdemo.valesordev.com/quiz/answers/1', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dataToSend),
+                body: JSON.stringify(answers),
             });
             if(!response.ok) {
                 console.error(response.statusText);
@@ -100,7 +91,7 @@ const Quizzer: React.FC = () => {
                                        name={"question" + question.id}
                                        value={option.id}
                                        onChange={() => handleRadioChange(question.id, option.id)}
-                                       checked={selectedList1 === option.id} />
+                                       checked={answers[question.id] === option.id} />
                                 {option.label}
                             </label>
                         ))}

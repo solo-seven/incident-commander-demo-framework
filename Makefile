@@ -39,7 +39,7 @@ start: build create load helm
 
 .PHONY: run
 run: build load
-	kubectl apply -k .
+	kubectl apply -k ./deploy
 
 .PHONY: clean-docker
 clean-docker: clean-docker-agent clean-docker-frontend clean-docker-backend

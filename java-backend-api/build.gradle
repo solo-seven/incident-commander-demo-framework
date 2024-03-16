@@ -33,6 +33,7 @@ dependencies {
     implementation 'com.grafana:grafana-opentelemetry-starter:1.4.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 tasks.named('test') {
